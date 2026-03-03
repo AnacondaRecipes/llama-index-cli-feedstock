@@ -1,6 +1,5 @@
 {% set name = "llama-index-cli" %}
 {% set version = "0.5.3" %}
-{% set python_min = "3.10" %}
 
 package:
   name: {{ name|lower }}
@@ -11,19 +10,19 @@ source:
   sha256: ebaf39e785efbfa8d50d837f60cb0f95125c04bf73ed1f92092a2a5f506172f8
 
 build:
+  number: 0
+  skip: true  # [py<310]
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   entry_points:
     - llamaindex-cli = llama_index.cli.command_line:main
-  noarch: python
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 0
 
 requirements:
   host:
-    - python {{ python_min }}
+    - python
     - hatchling
     - pip
   run:
-    - python >={{ python_min }},<4.0
+    - python
     - llama-index-core >=0.13.0,<0.15
     - llama-index-embeddings-openai >=0.5.0,<0.6
     - llama-index-llms-openai >=0.6.0,<0.7
@@ -36,13 +35,17 @@ test:
     - llamaindex-cli --help
   requires:
     - pip
-    - python {{ python_min }}
 
 about:
+  home: https://llamaindex.ai
   summary: llama-index cli
-  home: https://docs.llamaindex.ai/en/stable/getting_started/starter_tools/rag_cli/
+  description: |
+    LlamaIndex CLI provides a command-line interface for interacting with LlamaIndex,
+    enabling users to quickly set up and use RAG (Retrieval-Augmented Generation) pipelines.
   license: MIT
+  license_family: MIT
   license_file: LICENSE
+  doc_url: https://docs.llamaindex.ai/en/stable/getting_started/starter_tools/rag_cli/
   dev_url: https://github.com/run-llama/llama_index/tree/main/llama-index-cli
 
 extra:
